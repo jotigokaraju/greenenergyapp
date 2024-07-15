@@ -3,8 +3,8 @@ import replicate
 import os
 from transformers import AutoTokenizer
 
-# Set assistant icon to Snowflake logo
-icons = {"assistant": "./Snowflake_Logomark_blue.svg", "user": "⛷️"}
+# Set assistant icon to text representation
+icons = {"assistant": "🤖", "user": "👤"}
 
 # App title
 st.set_page_config(page_title="EcoEstimator")
@@ -94,11 +94,11 @@ with st.form("my_form"):
         )
         
         st.session_state.messages.append({"role": "user", "content": user_input})
-        with st.chat_message("user", avatar="⛷️"):
+        with st.chat_message("user", avatar=icons["user"]):
             st.write(user_input)
 
         if st.session_state.messages[-1]["role"] != "assistant":
-            with st.chat_message("assistant", avatar="./Snowflake_Logomark_blue.svg"):
+            with st.chat_message("assistant", avatar=icons["assistant"]):
                 prompt = []
                 for dict_message in st.session_state.messages:
                     if dict_message["role"] == "user":
