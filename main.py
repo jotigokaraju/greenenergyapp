@@ -4,10 +4,11 @@ from transformers import pipeline
 # Caching the model
 @st.cache_resource
 def gpt2():
+    
     return pipeline("text-generation", model="openai-community/gpt2")
 
 # Load the model
-model = gpt2()
+
 
 # Streamlit app
 st.title("EcoEstimator")
@@ -27,6 +28,7 @@ with st.form("my_form"):
     # Every form must have a submit button.
     submitted = st.form_submit_button("Submit")
     if submitted:
+        model = gpt2()
         # Prepare the input for the model
         user_input = (
             f"I have a budget of ${budget}. I live in a {home} in {location}. My monthly electricity bill is ${electricity_bill}. "
