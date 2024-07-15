@@ -1,117 +1,50 @@
 import streamlit as st
 import replicate
-import os
-from transformers import AutoTokenizer
 
-# Set assistant icon to text representation
-icons = {"assistant": "🤖", "user": "👤"}
-
-# App title
-st.set_page_config(page_title="EcoEstimator")
-
-# Replicate Credentials
-with st.sidebar:
-    st.title('EcoEstimator - Snowflake Arctic')
-    if 'REPLICATE_API_TOKEN' in st.secrets:
-        replicate_api = st.secrets['REPLICATE_API_TOKEN']
-    else:
-        replicate_api = st.text_input('Enter Replicate API token:', type='password')
-        if not (replicate_api.startswith('r8_') and len(replicate_api) == 40):
-            st.warning('Please enter your Replicate API token.', icon='⚠️')
-            st.markdown("**Don't have an API token?** Head over to [Replicate](https://replicate.com) to sign up for one.")
-
-    os.environ['REPLICATE_API_TOKEN'] = replicate_api
-    st.subheader("Adjust model parameters")
-    temperature = st.sidebar.slider('temperature', min_value=0.01, max_value=5.0, value=0.3, step=0.01)
-    top_p = st.sidebar.slider('top_p', min_value=0.01, max_value=1.0, value=0.9, step=0.01)
-
-# Store LLM-generated responses
-if "messages" not in st.session_state.keys():
-    st.session_state.messages = [{"role": "assistant", "content": "Hi. I'm Arctic, a new, efficient, intelligent, and truly open language model created by Snowflake AI Research. Ask me anything."}]
-
-# Display or clear chat messages
-for message in st.session_state.messages:
-    with st.chat_message(message["role"], avatar=icons[message["role"]]):
-        st.write(message["content"])
-
-def clear_chat_history():
-    st.session_state.messages = [{"role": "assistant", "content": "Hi. I'm Arctic, a new, efficient, intelligent, and truly open language model created by Snowflake AI Research. Ask me anything."}]
-
-st.sidebar.button('Clear chat history', on_click=clear_chat_history)
-st.sidebar.caption('Built by [Snowflake](https://snowflake.com/) to demonstrate [Snowflake Arctic](https://www.snowflake.com/blog/arctic-open-and-efficient-foundation-language-models-snowflake). App hosted on [Streamlit Community Cloud](https://streamlit.io/cloud). Model hosted by [Replicate](https://replicate.com/snowflake/snowflake-arctic-instruct).')
-st.sidebar.caption('Build your own app powered by Arctic and [enter to win](https://arctic-streamlit-hackathon.devpost.com/) $10k in prizes.')
-
-@st.cache_resource(show_spinner=False)
-def get_tokenizer():
-    """Get a tokenizer to make sure we're not sending too much text
-    text to the Model. Eventually we will replace this with ArcticTokenizer
-    """
-    return AutoTokenizer.from_pretrained("huggyllama/llama-7b")
-
-def get_num_tokens(prompt):
-    """Get the number of tokens in a given prompt"""
-    tokenizer = get_tokenizer()
-    tokens = tokenizer.tokenize(prompt)
-    return len(tokens)
-
-# Function for generating Snowflake Arctic response
 def generate_arctic_response(prompt_str):
-    if get_num_tokens(prompt_str) >= 3072:
-        st.error("Conversation length too long. Please keep it under 3072 tokens.")
-        st.button('Clear chat history', on_click=clear_chat_history, key="clear_chat_history")
-        st.stop()
+    for event in replicate.stream(
+        "snowflake/snowflake-arctic-instruct",
+        input={"prompt": prompt_str, "prompt_template": r"{prompt}", "temperature": 0.7},
+    ):
+        yield event
 
-    for event in replicate.stream("snowflake/snowflake-arctic-instruct",
-                                  input={"prompt": prompt_str,
-                                         "prompt_template": r"{prompt}",
-                                         "temperature": temperature,
-                                         "top_p": top_p,
-                                         }):
-        yield str(event)
+def main():
+    st.title("Arctic AI Chatbot")
 
-# Streamlit app
-st.title("EcoEstimator")
-st.header("Helping You Transition to Green Energy")
-st.divider()
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
 
-st.header("Questionnaire")
-st.write("Please answer the following questions:")
+    def clear_chat_history():
+        st.session_state.messages = []
 
-with st.form("my_form"):
-    st.write("Rapid Form")
-    budget = st.slider("What is your budget?", 0, 500000, 50000)
-    home = st.text_input("What type of house do you live in?", "Condo")
-    location = st.text_input("Where do you live?", "Vancouver")
-    electricity_bill = st.number_input("What is your monthly electricity bill?")
+    # Get user input
+    user_input = st.text_input("You:", key="user_input")
+    if st.button("Send"):
+        if user_input:
+            # Add user message to session state
+            user_message = {"role": "user", "content": user_input}
+            st.session_state.messages.append(user_message)
 
-    # Every form must have a submit button.
-    submitted = st.form_submit_button("Submit")
-    if submitted:
-        # Prepare the input for the model
-        user_input = (
-            f"I have a budget of ${budget}. I live in a {home} in {location}. My monthly electricity bill is ${electricity_bill}. "
-            "Based on this information, what type of green energy source would you recommend for me (e.g., solar panels, changing to LED lights, etc.)?"
-        )
-        
-        st.session_state.messages.append({"role": "user", "content": user_input})
-        with st.chat_message("user", avatar=icons["user"]):
-            st.write(user_input)
+            # Generate and display the assistant's response
+            prompt = [msg["content"] for msg in st.session_state.messages]
+            prompt_str = "\n".join(prompt)
 
-        if st.session_state.messages[-1]["role"] != "assistant":
-            with st.chat_message("assistant", avatar=icons["assistant"]):
-                prompt = []
-                for dict_message in st.session_state.messages:
-                    if dict_message["role"] == "user":
-                        prompt.append("user\n" + dict_message["content"] + "")
-                    else:
-                        prompt.append("assistant\n" + dict_message["content"] + "")
+            response_stream = generate_arctic_response(prompt_str)
+            response_content = ""
+            for response in response_stream:
+                response_content += response
 
-                prompt.append("assistant")
-                prompt.append("")
-                prompt_str = "\n".join(prompt)
+            assistant_message = {"role": "assistant", "content": response_content}
+            st.session_state.messages.append(assistant_message)
 
-                response = generate_arctic_response(prompt_str)
-                full_response = st.write_stream(response)
-                
-                message = {"role": "assistant", "content": full_response}
-                st.session_state.messages.append(message)
+    # Display chat messages
+    for message in st.session_state.messages:
+        if message["role"] == "user":
+            st.text_area("User", value=message["content"], key=hash(message["content"]))
+        else:
+            st.text_area("Assistant", value=message["content"], key=hash(message["content"]))
+
+    st.button('Clear chat history', on_click=clear_chat_history, key="clear_button")
+
+if __name__ == "__main__":
+    main()
