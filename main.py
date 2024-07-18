@@ -1,50 +1,47 @@
 import streamlit as st
-import replicate
+from transformers import pipeline
+from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
-def generate_arctic_response(prompt_str):
-    for event in replicate.stream(
-        "snowflake/snowflake-arctic-instruct",
-        input={"prompt": prompt_str, "prompt_template": r"{prompt}", "temperature": 0.7},
-    ):
-        yield event
+model_name = "gpt2"
+model = GPT2LMHeadModel.from_pretrained(model_name)
+tokenizer = GPT2Tokenizer.from_pretrained(model_name)
 
-def main():
-    st.title("Arctic AI Chatbot")
+# Caching the model
+@st.cache_resource
+def gpt2():
 
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
+    return pipeline("text-generation", model="openai-community/gpt2")
 
-    def clear_chat_history():
-        st.session_state.messages = []
+# Load the model
+model = gpt2()
 
-    # Get user input
-    user_input = st.text_input("You:", key="user_input")
-    if st.button("Send"):
-        if user_input:
-            # Add user message to session state
-            user_message = {"role": "user", "content": user_input}
-            st.session_state.messages.append(user_message)
 
-            # Generate and display the assistant's response
-            prompt = [msg["content"] for msg in st.session_state.messages]
-            prompt_str = "\n".join(prompt)
-
-            response_stream = generate_arctic_response(prompt_str)
-            response_content = ""
-            for response in response_stream:
-                response_content += response
-
-            assistant_message = {"role": "assistant", "content": response_content}
-            st.session_state.messages.append(assistant_message)
-
-    # Display chat messages
-    for message in st.session_state.messages:
-        if message["role"] == "user":
-            st.text_area("User", value=message["content"], key=hash(message["content"]))
-        else:
-            st.text_area("Assistant", value=message["content"], key=hash(message["content"]))
-
-    st.button('Clear chat history', on_click=clear_chat_history, key="clear_button")
-
-if __name__ == "__main__":
-    main()
+# Streamlit app
+st.title("EcoEstimator")
+st.header("Helping You Transition to Green Energy")
+st.divider()
+st.header("Questionnaire")
+st.write("Please answer the following questions:")
+with st.form("my_form"):
+    st.write("Rapid Form")
+    budget = st.slider("What is your budget?", 0, 500000, 50000)
+    home = st.text_input("What type of house do you live in?", "Condo")
+    location = st.text_input("Where do you live?", "Vancouver")
+    electricity_bill = st.number_input("What is your monthly electricity bill?")
+    # Every form must have a submit button.
+    submitted = st.form_submit_button("Submit")
+    if submitted:
+        if st.button("Generate"):
+        prompt = (
+            f"I have a budget of ${budget}. I live in a {home} in {location}. My monthly electricity bill is ${electricity_bill}. "
+            "Based on this information, what type of green energy source would you recommend for me (e.g., solar panels, changing to LED lights, etc.)?"
+        )
+        
+        input_ids = tokenizer.encode(prompt, return_tensors="pt")
+        output = model.generate(input_ids, max_length=100)
+        generated_text = tokenizer.decode(output[0], skip_special_tokens=True)
+        
+        # Prepare the input for the model
+        
+        st.header("Recommended Green Energy Source")
+        st.write(generated_text)
