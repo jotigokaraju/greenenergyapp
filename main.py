@@ -24,7 +24,7 @@ with st.form("my_form"):
     budget = st.slider("What is your budget?", 0, 500000, 50000)
     home = st.text_input("What type of house do you live in?", "Condo")
     location = st.text_input("Where do you live?", "Vancouver")
-    electricity_bill = st.number_input("What is your monthly electricity bill?")
+    electricity_bill = st.number_input("What is your monthly electricity bill?", value=0.0, format="%.2f")
     # Every form must have a submit button.
     submitted = st.form_submit_button("Submit")
     if submitted:
