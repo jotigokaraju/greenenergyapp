@@ -32,16 +32,16 @@ with st.form("my_form"):
     submitted = st.form_submit_button("Submit")
     if submitted:
         if st.button("Generate"):
-        prompt = (
-            f"I have a budget of ${budget}. I live in a {home} in {location}. My monthly electricity bill is ${electricity_bill}. "
-            "Based on this information, what type of green energy source would you recommend for me (e.g., solar panels, changing to LED lights, etc.)?"
-        )
-        
-        input_ids = tokenizer.encode(prompt, return_tensors="pt")
-        output = model.generate(input_ids, max_length=100)
-        generated_text = tokenizer.decode(output[0], skip_special_tokens=True)
-        
-        # Prepare the input for the model
-        
-        st.header("Recommended Green Energy Source")
-        st.write(generated_text)
+            prompt = (
+                f"I have a budget of ${budget}. I live in a {home} in {location}. My monthly electricity bill is ${electricity_bill}. "
+                "Based on this information, what type of green energy source would you recommend for me (e.g., solar panels, changing to LED lights, etc.)?"
+            )
+            
+            input_ids = tokenizer.encode(prompt, return_tensors="pt")
+            output = model.generate(input_ids, max_length=100)
+            generated_text = tokenizer.decode(output[0], skip_special_tokens=True)
+            
+            # Prepare the input for the model
+            
+            st.header("Recommended Green Energy Source")
+            st.write(generated_text)
