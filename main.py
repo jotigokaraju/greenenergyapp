@@ -29,11 +29,14 @@ with st.form("my_form"):
     submitted = st.form_submit_button("Submit")
     if submitted:
         prompt = (
-            f"I have a budget of {budget}. I live in a {home} in {location}. My monthly electricity bill is {electricity_bill}. "
-            "Based on this information, what type of green energy source would you recommend for me (e.g., solar panels, changing to LED lights, etc.)? Provide a single answer with a one sentence rationale."
+            f"I have a budget of ${budget}. I live in a {home} in {location}. My monthly electricity bill is ${electricity_bill}. "
+            "Based on this information, what type of green energy source would you recommend for me (e.g., solar panels, changing to LED lights, etc.)?"
         )
 
-        generated_text = text_generator(prompt, max_length=100, num_return_sequences=1)[0]['generated_text']
+        input_ids = tokenizer.encode(prompt, return_tensors="pt", truncation=True)
+        input_ids = input_ids[:, :100]  # Truncate input to avoid excessive length
+        output = model.generate(input_ids, max_length=100, pad_token_id=tokenizer.eos_token_id)
+        generated_text = tokenizer.decode(output[0], skip_special_tokens=True)
         
         st.header("Recommended Green Energy Source")
         st.write(generated_text)
