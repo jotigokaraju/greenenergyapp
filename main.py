@@ -1,6 +1,5 @@
 import streamlit as st
-from transformers import pipeline
-from transformers import GPT2LMHeadModel, GPT2Tokenizer
+from transformers import GPT2LMHeadModel, GPT2Tokenizer, pipeline
 
 model_name = "gpt2"
 model = GPT2LMHeadModel.from_pretrained(model_name)
@@ -8,13 +7,11 @@ tokenizer = GPT2Tokenizer.from_pretrained(model_name)
 
 # Caching the model
 @st.cache_resource
-def gpt2():
-
-    return pipeline("text-generation", model="openai-community/gpt2")
+def gpt2_pipeline():
+    return pipeline("text-generation", model=model, tokenizer=tokenizer)
 
 # Load the model
-model = gpt2()
-
+text_generator = gpt2_pipeline()
 
 # Streamlit app
 st.title("EcoEstimator")
@@ -35,12 +32,8 @@ with st.form("my_form"):
             f"I have a budget of ${budget}. I live in a {home} in {location}. My monthly electricity bill is ${electricity_bill}. "
             "Based on this information, what type of green energy source would you recommend for me (e.g., solar panels, changing to LED lights, etc.)?"
         )
-        
-        input_ids = tokenizer.encode(prompt, return_tensors="pt")
-        output = model.generate(input_ids, max_length=100)
-        generated_text = tokenizer.decode(output[0], skip_special_tokens=True)
-        
-        # Prepare the input for the model
+
+        generated_text = text_generator(prompt, max_length=100, num_return_sequences=1)[0]['generated_text']
         
         st.header("Recommended Green Energy Source")
         st.write(generated_text)
