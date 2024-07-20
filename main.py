@@ -52,6 +52,7 @@ def survey():
     st.header("Questionnaire")
     st.write("Please answer the following questions:")
 
+    # Form to gather user input
     with st.form("my_form"):
         st.write("Rapid Form")
         budget = st.slider("What is your budget?", 0, 500000, 50000)
@@ -59,8 +60,16 @@ def survey():
         location = st.text_area("Where do you live?", "Vancouver")
         electricity_bill = st.number_input("What is your monthly electricity bill?", value=0.0, format="%.2f")
         
+        # Form submit button
         submitted = st.form_submit_button("Submit")
+        
         if submitted:
+            # Update session state
+            st.session_state.budget = budget
+            st.session_state.electricity_bill = electricity_bill
+            st.session_state.submitted = True
+            st.session_state.show_chart = False
+
             st.write(f"Budget: {budget}")
             st.write(f"Home: {home}")
             st.write(f"Location: {location}")
@@ -76,11 +85,14 @@ def survey():
             st.success(f"Based on your specified information, EcoEstimator AI recommends that you install ${budget_purchase} worth of solar panels, spend ${budget_install} on installation, spend ${budget_batteries} on supplementary battery costs, ${budget_inverter} on an inverter, and ${budget_additional} on other hardware.") 
             st.write("For more information, purchase the premium version")
 
-            # Calculate savings
-            savings = calculate_energy_savings(electricity_bill, budget_purchase)
-
-            if st.button("Premium"):
-                display_recommendations(budget, electricity_bill, savings)
+    # Button outside the form to display the chart
+    if st.session_state.get('submitted', False):
+        if st.button("Premium"):
+            # Calculate savings and display chart
+            budget_purchase = st.session_state.budget * 0.4
+            savings = calculate_energy_savings(st.session_state.electricity_bill, budget_purchase)
+            display_recommendations(st.session_state.budget, st.session_state.electricity_bill, savings)
+            st.session_state.show_chart = True
 
 page_names_to_funcs = {
     "English": survey,
