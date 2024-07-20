@@ -10,36 +10,35 @@ def survey():
     
     
     def style(budget, current_bill, solar_panel_cost):
-        if st.button("Premium"):
-            # Constants
-            BASIC_CHARGE = 6.759  # Monthly basic charge in dollars
-            STEP1_RATE = 0.1097   # Step 1 energy charge in dollars per kWh
-            STEP2_RATE = 0.1408   # Step 2 energy charge in dollars per kWh
-            STEP1_LIMIT = 1376    # Step 1 limit in kWh
-            SOLAR_COST_PER_WATT = 2.30
-            HOURS_PER_DAY = 4
-            DAYS_PER_MONTH = 30
-        
-            # Calculate net charge excluding the basic charge
-            net_charge = current_bill - BASIC_CHARGE
-        
-            # Determine total kWh consumption (Q)
-            if net_charge <= STEP1_LIMIT * STEP1_RATE:
-                total_kwh_consumption = net_charge / STEP1_RATE
-            else:
-                q1_cost = STEP1_LIMIT * STEP1_RATE
-                q2_cost = (net_charge - q1_cost) / STEP2_RATE
-                total_kwh_consumption = STEP1_LIMIT + q2_cost
-        
-            # Calculate the total kWh production from the installed solar panels
-            system_size_watts = solar_panel_cost / SOLAR_COST_PER_WATT
-            monthly_solar_kwh = (system_size_watts / 1000) * HOURS_PER_DAY * DAYS_PER_MONTH
-        
-            # Compute monthly savings
-            if monthly_solar_kwh <= STEP1_LIMIT:
-                savings = monthly_solar_kwh * STEP1_RATE
-            else:
-                savings = (STEP1_LIMIT * STEP1_RATE) + ((monthly_solar_kwh - STEP1_LIMIT) * STEP2_RATE)
+        # Constants
+        BASIC_CHARGE = 6.759  # Monthly basic charge in dollars
+        STEP1_RATE = 0.1097   # Step 1 energy charge in dollars per kWh
+        STEP2_RATE = 0.1408   # Step 2 energy charge in dollars per kWh
+        STEP1_LIMIT = 1376    # Step 1 limit in kWh
+        SOLAR_COST_PER_WATT = 2.30
+        HOURS_PER_DAY = 4
+        DAYS_PER_MONTH = 30
+    
+        # Calculate net charge excluding the basic charge
+        net_charge = current_bill - BASIC_CHARGE
+    
+        # Determine total kWh consumption (Q)
+        if net_charge <= STEP1_LIMIT * STEP1_RATE:
+            total_kwh_consumption = net_charge / STEP1_RATE
+        else:
+            q1_cost = STEP1_LIMIT * STEP1_RATE
+            q2_cost = (net_charge - q1_cost) / STEP2_RATE
+            total_kwh_consumption = STEP1_LIMIT + q2_cost
+    
+        # Calculate the total kWh production from the installed solar panels
+        system_size_watts = solar_panel_cost / SOLAR_COST_PER_WATT
+        monthly_solar_kwh = (system_size_watts / 1000) * HOURS_PER_DAY * DAYS_PER_MONTH
+    
+        # Compute monthly savings
+        if monthly_solar_kwh <= STEP1_LIMIT:
+            savings = monthly_solar_kwh * STEP1_RATE
+        else:
+            savings = (STEP1_LIMIT * STEP1_RATE) + ((monthly_solar_kwh - STEP1_LIMIT) * STEP2_RATE)
     
         data_df = pd.DataFrame(
             {
