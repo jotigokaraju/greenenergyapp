@@ -35,30 +35,15 @@ def calculate_energy_savings(current_bill, solar_panel_cost):
     return savings
 
 def display_recommendations(budget, current_bill, savings):
+    # Prepare data for the bar chart
     data = {
         "Current Bill": [current_bill],
         "New Bill": [current_bill - savings]
     }
     data_df = pd.DataFrame(data)
-
-    st.data_editor(
-        data_df,
-        column_config={
-            "Current Bill": st.column_config.BarChartColumn(
-                "Current Bill",
-                help="Your current electricity bill",
-                y_min=0,
-                y_max=100,
-            ),
-            "New Bill": st.column_config.BarChartColumn(
-                "New Bill",
-                help="Your new electricity bill after savings",
-                y_min=0,
-                y_max=100,
-            ),
-        },
-        hide_index=True,
-    )
+    
+    # Display the bar chart
+    st.bar_chart(data_df)
 
 def survey():
     st.title("EcoShift")
@@ -93,7 +78,9 @@ def survey():
 
             # Calculate savings
             savings = calculate_energy_savings(electricity_bill, budget_purchase)
-            display_recommendations(budget, electricity_bill, savings)
+
+            if st.button("Premium"):
+                display_recommendations(budget, electricity_bill, savings)
 
 page_names_to_funcs = {
     "English": survey,
