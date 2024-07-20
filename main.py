@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+import requests
+from bs4 import BeautifulSoup
 
 # Constants for energy calculations
 BASIC_CHARGE = 6.759  # Monthly basic charge in dollars
@@ -78,6 +80,19 @@ def show_survey_page():
             display_recommendations(st.session_state.budget, st.session_state.electricity_bill, savings)
             st.session_state.show_chart = True
 
+def search_bing(query):
+    headers = {"User-Agent": "Mozilla/5.0"}
+    url = f"https://www.bing.com/search?q={query}"
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.text, "html.parser")
+
+    links = []
+    for item in soup.find_all('li', class_='b_algo'):
+        link = item.find('a')['href']
+        links.append(link)
+    
+    return links
+
 def show_search_page():
     st.title("Product Search")
     st.header("Search for Products")
@@ -85,11 +100,14 @@ def show_search_page():
 
     search_query = st.text_input("Search", "")
     
-    if search_query.lower() == "lightbulbs":
-        st.write("Here is a link to find lightbulbs:")
-        st.markdown("[Home Depot - Light Bulbs](https://www.homedepot.com/b/Lighting-Light-Bulbs/N-5yc1vZbmbu)", unsafe_allow_html=True)
-    else:
-        st.write("No results found. Please try searching for 'lightbulbs'.")
+    if search_query:
+        results = search_bing(search_query)
+        if results:
+            st.write("Here are some links related to your search:")
+            for result in results:
+                st.markdown(f"[{result}]({result})", unsafe_allow_html=True)
+        else:
+            st.write("No results found. Please try a different query.")
 
 def main():
     st.sidebar.title("Navigation")
