@@ -37,13 +37,13 @@ def calculate_energy_savings(current_bill, solar_panel_cost):
 def display_recommendations(budget, current_bill, savings):
     # Prepare data for the bar chart
     data = {
-        "Current Bill": [current_bill],
-        "New Bill": [current_bill - savings]
+        "Category": ["Current Bill", "New Bill"],
+        "Amount": [current_bill, current_bill - savings]
     }
     data_df = pd.DataFrame(data)
     
     # Display the bar chart
-    st.bar_chart(data_df)
+    st.bar_chart(data_df.set_index('Category'))
 
 def survey():
     st.title("EcoShift")
