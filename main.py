@@ -62,13 +62,6 @@ def survey():
             hide_index=True,
         )
 
-# Example usage
-current_bill = 400  # Example current electricity bill in dollars
-solar_panel_cost = 10000  # Example total cost of installed solar panels in dollars
-
-monthly_savings = calculate_monthly_savings(current_bill, solar_panel_cost)
-print(f"Estimated Monthly Savings: ${monthly_savings:.2f}")
-
     # Streamlit app
     st.title("EcoShift")
     st.header("Helping You Transition to Green Energy")
