@@ -148,7 +148,8 @@ def main():
     page = st.sidebar.radio("Select Page", ["Home", "Survey", "Search"])
     
     if page == "Home":
-        st.image('EcoShift-removebg-preview.png')
+        st.logo('EcoShift-removebg-preview.png')
+        st.divider()
         st.title("Welcome to EcoShift")
         st.header("Your Partner in Green Energy")
         st.write("""
