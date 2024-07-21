@@ -41,15 +41,23 @@ def display_recommendations(budget, current_bill, savings):
     st.divider()
     st.subheader("Estimated Energy Bills")
     st.bar_chart(data_df.set_index('Category'))
+    if (current_bill - savings) > 0:
+        st.success(f"You will save {savings} a month!")
+    else:
+        st.success("You are producing more energy than you need!")
+        st.success(f"You can profit {savings} a month by selling the extra energy back to the grid.")
+    
     st.divider()
 
     # Calculate ROI over time
-    initial_investment = budget * 0.4
+    initial_investment = budget
     monthly_savings = savings
     months_to_break_even = initial_investment / monthly_savings
     years_to_break_even = months_to_break_even / 12
+    number = months_to_break_even * 1.5
+    number = round(number)
 
-    months = range(1, 121)  # 10 years
+    months = range(1, number)  # 10 years
     savings_over_time = [monthly_savings * month for month in months]
     initial_investment_line = [initial_investment] * 120
 
