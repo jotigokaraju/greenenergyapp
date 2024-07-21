@@ -99,7 +99,7 @@ def show_survey_page():
             st.write("For more information, purchase the premium version")
 
     if st.session_state.get('submitted', False):
-        if st.button("Premium"):
+        if st.button("Premium Version"):
             budget_purchase = st.session_state.budget * 0.4
             savings = calculate_energy_savings(st.session_state.electricity_bill, budget_purchase)
             display_recommendations(st.session_state.budget, st.session_state.electricity_bill, savings)
@@ -128,7 +128,7 @@ def show_search_page():
     if search_query:
         results = search_bing(search_query)
         if results:
-            st.subheader(EcoShift recommends the following:")
+            st.subheader("EcoShift recommends the following:")
             for result in results:
                 st.markdown(f"[{result}]({result})", unsafe_allow_html=True)
         else:
