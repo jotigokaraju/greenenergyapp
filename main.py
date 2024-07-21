@@ -74,6 +74,11 @@ def display_recommendations(budget, current_bill, savings):
 
     st.success(f"You will break even after approximately {years_to_break_even:.2f} years.")
 
+    st.divider()
+    st.subheader("Recommended Solar Panel Product:")
+    st.components.v1.iframe("https://ca.ecoflow.com/products/delta-160w-portable-solar-panel?variant=41338340081818", height=400, scrolling=True)
+
+
 def show_survey_page():
     st.title(":green[EcoShift Survey]")
     st.divider()
@@ -136,6 +141,7 @@ def show_search_page():
     st.write("Use the search bar below to find products and solutions.")
 
     search_query = st.text_input("Search", "")
+    search_query += " sustainable"
     
     if search_query:
         results = search_bing(search_query)
