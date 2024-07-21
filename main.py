@@ -38,7 +38,31 @@ def display_recommendations(budget, current_bill, savings):
     }
     data_df = pd.DataFrame(data)
     st.header("Analytics")
+    st.divider()
+    st.subheader("Estimated Energy Bills")
     st.bar_chart(data_df.set_index('Category'))
+    st.divider()
+
+    # Calculate ROI over time
+    initial_investment = budget * 0.4
+    monthly_savings = savings
+    months_to_break_even = initial_investment / monthly_savings
+    years_to_break_even = months_to_break_even / 12
+
+    months = range(1, 121)  # 10 years
+    savings_over_time = [monthly_savings * month for month in months]
+    initial_investment_line = [initial_investment] * 120
+
+    roi_data = pd.DataFrame({
+        "Month": months,
+        "Cumulative Savings": savings_over_time,
+        "Initial Investment": initial_investment_line
+    })
+
+    st.subheader("ROI Over Time")
+    st.line_chart(roi_data.set_index("Month"))
+
+    st.success(f"You will break even after approximately {years_to_break_even:.2f} years.")
 
 def show_survey_page():
     st.title("EcoShift Survey")
@@ -104,7 +128,7 @@ def show_search_page():
     if search_query:
         results = search_bing(search_query)
         if results:
-            st.write("Here are some links related to your search:")
+            st.subheader(EcoShift recommends the following:")
             for result in results:
                 st.markdown(f"[{result}]({result})", unsafe_allow_html=True)
         else:
