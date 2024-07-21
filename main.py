@@ -58,7 +58,7 @@ def display_recommendations(budget, current_bill, savings):
     number = int(months_to_break_even * 1.5)  # Extend the timeline to 1.5 times the break-even point
 
     months = range(1, number + 1)
-    savings_over_time = [monthly_savings * month for month in months]
+    savings_over_time = [8000 + monthly_savings * month for month in months]
     initial_investment_line = [initial_investment] * len(months)  # Match the length of months
 
     roi_data = pd.DataFrame({
@@ -68,6 +68,7 @@ def display_recommendations(budget, current_bill, savings):
     })
 
     st.subheader("ROI Over Time")
+    st.success("You will recieve $8000 in federal and provincial rebates")
     st.line_chart(roi_data.set_index("Month"))
 
     st.success(f"You will break even after approximately {years_to_break_even:.2f} years.")
