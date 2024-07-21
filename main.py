@@ -149,9 +149,10 @@ def main():
     
     if page == "Home":
         st.logo('EcoShifting.png')
+        st.title(":green[EcoShift]")
         st.divider()
-        st.title("Welcome to EcoShift")
-        st.header("Your Partner in Green Energy")
+        st.header("Welcome to EcoShift")
+        st.subheader("Your Partner in Green Energy")
         st.write("""
             EcoShift is designed to help you transition to green energy solutions with ease. 
 
