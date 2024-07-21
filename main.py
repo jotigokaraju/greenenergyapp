@@ -45,21 +45,21 @@ def display_recommendations(budget, current_bill, savings):
         st.success(f"You will save {savings} a month!")
     else:
         st.success("You are producing more energy than you need!")
-        st.success(f"You can profit {round(savings)} a month by selling the extra energy back to the grid.")
+        st.success(f"You can profit ${round(savings)} a month by selling the extra energy back to the grid.")
     
     st.divider()
 
     # Calculate ROI over time
-    initial_investment = budget
+    initial_investment = budget * 0.4
     monthly_savings = savings
     months_to_break_even = initial_investment / monthly_savings
     years_to_break_even = months_to_break_even / 12
-    number = months_to_break_even * 1.5
-    number = round(number)
 
-    months = range(1, 240)  # 10 years
+    number = int(months_to_break_even * 1.5)  # Extend the timeline to 1.5 times the break-even point
+
+    months = range(1, number + 1)
     savings_over_time = [monthly_savings * month for month in months]
-    initial_investment_line = [initial_investment] * 240
+    initial_investment_line = [initial_investment] * len(months)  # Match the length of months
 
     roi_data = pd.DataFrame({
         "Month": months,
