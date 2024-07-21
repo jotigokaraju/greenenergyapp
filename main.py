@@ -74,9 +74,11 @@ def display_recommendations(budget, current_bill, savings):
     st.success(f"You will break even after approximately {years_to_break_even:.2f} years.")
 
 def show_survey_page():
-    st.title("EcoShift Survey")
+    st.title(":green[EcoShift Survey]")
+    st.divider()
     st.header("Helping You Transition to Green Energy")
     st.write("Please fill out the following form to get personalized recommendations:")
+
 
     with st.form("survey_form"):
         st.write("Rapid Form")
@@ -128,7 +130,8 @@ def search_bing(query):
     return links
 
 def show_search_page():
-    st.title("Product Search")
+    st.title(":green[EcoShift Product Search]")
+    st.divider()
     st.header("Search for Products")
     st.write("Use the search bar below to find products and solutions.")
 
