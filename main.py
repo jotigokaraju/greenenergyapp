@@ -45,7 +45,7 @@ def display_recommendations(budget, current_bill, savings):
         st.success(f"You will save {savings} a month!")
     else:
         st.success("You are producing more energy than you need!")
-        st.success(f"You can profit {savings} a month by selling the extra energy back to the grid.")
+        st.success(f"You can profit {round(savings)} a month by selling the extra energy back to the grid.")
     
     st.divider()
 
