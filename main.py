@@ -116,13 +116,14 @@ def show_survey_page():
             st.success(
                 f"Based on your specified information, EcoShifter AI recommends that you install "
                 f"{budget_purchase:,.2f} CAD in solar panels, spend {budget_install:,.2f} CAD on installation costs, "
-                f"spend {budget_batteries:,.2f} CAD on supplementary battery costs, ${budget_inverter:,.2f} CAD on an inverter, "
-                f"and ${budget_additional:,.2f} CAD on other hardware."
+                f"spend {budget_batteries:,.2f} CAD on supplementary battery costs, {budget_inverter:,.2f} CAD on an inverter, "
+                f"and {budget_additional:,.2f} CAD on other hardware."
             ) 
             st.write("For more information, purchase the premium version")
+            st.divider()
 
     if st.session_state.get('submitted', False):
-        if st.button("Premium Version"):
+        if st.button("Premium Version", type="main"):
             budget_purchase = st.session_state.budget * 0.4
             savings = calculate_energy_savings(st.session_state.electricity_bill, budget_purchase)
             display_recommendations(st.session_state.budget, st.session_state.electricity_bill, savings)
