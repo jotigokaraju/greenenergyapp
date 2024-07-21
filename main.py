@@ -134,6 +134,19 @@ def search_bing(query):
     
     return links
 
+def search_bing(query):
+    headers = {"User-Agent": "Mozilla/5.0"}
+    url = f"https://www.bing.com/search?q={query}"
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.text, "html.parser")
+
+    links = []
+    for item in soup.find_all('li', class_='b_algo'):
+        link = item.find('a')['href']
+        links.append(link)
+    
+    return links
+
 def show_search_page():
     st.title(":green[EcoShift Product Search]")
     st.divider()
@@ -146,14 +159,12 @@ def show_search_page():
         results = search_bing(search_query)
         if results:
             st.subheader("EcoShift recommends the following:")
-            # Display the top search result link
-            top_result = results[0]
-            st.markdown(f"[Top search result]({top_result})", unsafe_allow_html=True)
-            # Display the iframe with the top search result
-            st.components.v1.iframe(top_result, height=400, scrolling=True)
+            # Display all the search result links
+            for result in results:
+                st.markdown(f"[{result}]({result})", unsafe_allow_html=True)
         else:
             st.write("No results found. Please try a different query.")
-
+            
 def main():
     st.sidebar.title("Navigation")
     page = st.sidebar.radio("Select Page", ["Home", "Survey", "Search"])
