@@ -57,9 +57,9 @@ def display_recommendations(budget, current_bill, savings):
     number = months_to_break_even * 1.5
     number = round(number)
 
-    months = range(1, number)  # 10 years
+    months = range(1, 240)  # 10 years
     savings_over_time = [monthly_savings * month for month in months]
-    initial_investment_line = [initial_investment] * 120
+    initial_investment_line = [initial_investment] * 240
 
     roi_data = pd.DataFrame({
         "Month": months,
