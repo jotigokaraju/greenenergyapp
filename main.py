@@ -50,7 +50,7 @@ def display_recommendations(budget, current_bill, savings):
     st.divider()
 
     # Calculate ROI over time
-    initial_investment = budget * 0.4
+    initial_investment = budget
     monthly_savings = savings
     months_to_break_even = initial_investment / monthly_savings
     years_to_break_even = months_to_break_even / 12
