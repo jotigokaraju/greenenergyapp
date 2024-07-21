@@ -75,7 +75,7 @@ def display_recommendations(budget, current_bill, savings):
     st.success(f"You will break even after approximately {years_to_break_even:.2f} years.")
 
     st.divider()
-    st.subheader("Recommended Solar Panel Product:")
+    st.subheader("Recommended Product:")
     st.components.v1.iframe("https://ca.renogy.com/200-watt-12-volt-monocrystalline-solar-panel/?Rng_ads=85ea6920805ad1cd&kw=&ad=&gr=&ca=20221950916&pl=ga&gclid=CjwKCAjw4_K0BhBsEiwAfVVZ_zLbfdDqE1-74o4DDqSZnEUVj5lYYGzTiATz_bpF8kYwf5P0Zlvb7xoCg38QAvD_BwE&r_u_id=9222541894&gad_source=1", height=400, scrolling=True)
 
 
@@ -146,8 +146,11 @@ def show_search_page():
         results = search_bing(search_query)
         if results:
             st.subheader("EcoShift recommends the following:")
-            for result in results:
-                st.markdown(f"[{result}]({result})", unsafe_allow_html=True)
+            # Display the top search result link
+            top_result = results[0]
+            st.markdown(f"[Top search result]({top_result})", unsafe_allow_html=True)
+            # Display the iframe with the top search result
+            st.components.v1.iframe(top_result, height=400, scrolling=True)
         else:
             st.write("No results found. Please try a different query.")
 
