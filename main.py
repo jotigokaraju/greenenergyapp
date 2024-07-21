@@ -107,17 +107,17 @@ def show_survey_page():
             st.write(f"**Location:** {location}")
             st.write(f"**Electricity Bill:** ${electricity_bill:,.2f}")
 
-            budget_purchase = budget * 0.4
-            budget_install = budget * 0.2
-            budget_batteries = budget * 0.15
-            budget_inverter = budget * 0.05
-            budget_additional = budget * 0.1
+            budget_purchase = int(budget * 0.4)
+            budget_install = int(budget * 0.2)
+            budget_batteries = int(budget * 0.15)
+            budget_inverter = int(budget * 0.05)
+            budget_additional = int(budget * 0.1)
 
             st.success(
-                f"Based on your specified information, EcoEstimator AI recommends that you install "
-                f"${budget_purchase:,.2f} worth of solar panels, spend ${budget_install:,.2f} on installation, "
-                f"spend ${budget_batteries:,.2f} on supplementary battery costs, ${budget_inverter:,.2f} on an inverter, "
-                f"and ${budget_additional:,.2f} on other hardware."
+                f"Based on your specified information, EcoShifter AI recommends that you install "
+                f"{budget_purchase:,.2f} CAD in solar panels, spend {budget_install:,.2f} CAD on installation costs, "
+                f"spend {budget_batteries:,.2f} CAD on supplementary battery costs, ${budget_inverter:,.2f} CAD on an inverter, "
+                f"and ${budget_additional:,.2f} CAD on other hardware."
             ) 
             st.write("For more information, purchase the premium version")
 
