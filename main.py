@@ -45,7 +45,7 @@ def display_recommendations(budget, current_bill, savings):
     st.subheader("Estimated Energy Bills")
     st.bar_chart(data_df.set_index('Category'))
     if (current_bill - savings) > 0:
-        st.success(f"You will save {savings:.2f} a month!")
+        st.success(f"You will save ${savings:.2f} a month!")
     else:
         st.success("You are producing more energy than you need!")
         st.success(f"You can profit ${round(savings, 2)} a month by selling the extra energy back to the grid.")
@@ -125,32 +125,7 @@ def show_survey_page():
 
 def search_bing(query):
     headers = {"User-Agent": "Mozilla/5.0"}
-    url = f"https://www.bing.com/search?q={query}"
-    response = requests.get(url, headers=headers)
-    soup = BeautifulSoup(response.text, "html.parser")
-
-    links = []
-    for item in soup.find_all('li', class_='b_algo'):
-        link = item.find('a')['href']
-        links.append(link)
-    
-    return links
-
-def search_bing(query):
-    headers = {"User-Agent": "Mozilla/5.0"}
-    url = f"https://www.bing.com/search?q={query}"
-    response = requests.get(url, headers=headers)
-    soup = BeautifulSoup(response.text, "html.parser")
-
-    links = []
-    for item in soup.find_all('li', class_='b_algo'):
-        link = item.find('a')['href']
-        links.append(link)
-    
-    return links
-
-def search_bing(query):
-    headers = {"User-Agent": "Mozilla/5.0"}
+    query = f"{query} energy-efficient sustainable"
     url = f"https://www.bing.com/search?q={query}"
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.text, "html.parser")
@@ -211,26 +186,4 @@ def show_search_page():
             
 def main():
     st.sidebar.title("Navigation")
-    page = st.sidebar.radio("Select Page", ["Home", "Survey", "Search"])
-    
-    if page == "Home":
-        st.title(":green[EcoShift]")
-        st.divider()
-        st.header("Welcome to EcoShift")
-        st.subheader("Your Partner in Green Energy")
-        st.write("""
-            EcoShift is designed to help you transition to green energy solutions with ease. 
-
-            **What We Offer:**
-            - **Survey:** Get tailored recommendations for your green energy investments.
-            - **Search:** Find products and solutions to fit your needs.
-
-            Use the sidebar to navigate between pages.
-        """)
-    elif page == "Survey":
-        show_survey_page()
-    elif page == "Search":
-        show_search_page()
-
-if __name__ == "__main__":
-    main()
+    page = st.sidebar.radio("Select Page", ["Home", "Survey
