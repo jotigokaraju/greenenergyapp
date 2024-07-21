@@ -37,6 +37,7 @@ def display_recommendations(budget, current_bill, savings):
         "Amount": [current_bill, current_bill - savings]
     }
     data_df = pd.DataFrame(data)
+    st.header("Analytics")
     st.bar_chart(data_df.set_index('Category'))
 
 def show_survey_page():
