@@ -147,6 +147,19 @@ def search_bing(query):
     
     return links
 
+def search_bing(query):
+    headers = {"User-Agent": "Mozilla/5.0"}
+    url = f"https://www.bing.com/search?q={query}"
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.text, "html.parser")
+
+    links = []
+    for item in soup.find_all('li', class_='b_algo'):
+        link = item.find('a')['href']
+        links.append(link)
+    
+    return links
+
 def show_search_page():
     st.title(":green[EcoShift Product Search]")
     st.divider()
@@ -157,11 +170,40 @@ def show_search_page():
     
     if search_query:
         results = search_bing(search_query)
+        
         if results:
             st.subheader("EcoShift recommends the following:")
-            # Display all the search result links
-            for result in results:
-                st.markdown(f"[{result}]({result})", unsafe_allow_html=True)
+
+            # Sponsored section with customer testimonials
+            st.markdown("### ⭐ Sponsored")
+            st.markdown(f"**⭐ Sponsored Link 1:** [Click here]({results[0]})", unsafe_allow_html=True)
+            st.markdown(f"**⭐ Sponsored Link 2:** [Click here]({results[1]})", unsafe_allow_html=True)
+            
+            st.markdown("""
+            <div style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; margin-top: 10px;">
+                <h4>What Our Customers Are Saying</h4>
+                <blockquote>
+                    <p>"EcoShift has completely transformed the way I view energy efficiency. The recommendations were spot-on and helped me save a lot!"</p>
+                    <footer>- Jane D.</footer>
+                </blockquote>
+                <blockquote>
+                    <p>"I was impressed with the user-friendly interface and the personalized suggestions. It made the transition to green energy so much easier."</p>
+                    <footer>- Mark T.</footer>
+                </blockquote>
+                <blockquote>
+                    <p>"The search results and sponsored links helped me find the perfect products for my needs. Highly recommend EcoShift!"</p>
+                    <footer>- Emma R.</footer>
+                </blockquote>
+            </div>
+            """, unsafe_allow_html=True)
+
+            st.divider()
+
+            # Button to reveal additional links
+            if st.button("Show More Results"):
+                st.subheader("Additional Results")
+                for i in range(2, len(results)):
+                    st.markdown(f"**Link {i+1}:** [Click here]({results[i]})", unsafe_allow_html=True)
         else:
             st.write("No results found. Please try a different query.")
             
