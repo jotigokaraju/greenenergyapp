@@ -102,10 +102,10 @@ def show_survey_page():
             st.session_state.submitted = True
             st.session_state.show_chart = False
 
-            st.write(f"Budget: {budget}")
-            st.write(f"Home: {home}")
-            st.write(f"Location: {location}")
-            st.write(f"Electricity Bill: {electricity_bill}")
+            st.write(f"**Budget:** ${budget:,.2f}")
+            st.write(f"**Home:** {home}")
+            st.write(f"**Location:** {location}")
+            st.write(f"**Electricity Bill:** ${electricity_bill:,.2f}")
 
             budget_purchase = budget * 0.4
             budget_install = budget * 0.2
@@ -113,7 +113,12 @@ def show_survey_page():
             budget_inverter = budget * 0.05
             budget_additional = budget * 0.1
 
-            st.success(f"Based on your specified information, EcoEstimator AI recommends that you install ${budget_purchase} worth of solar panels, spend ${budget_install} on installation, spend ${budget_batteries} on supplementary battery costs, ${budget_inverter} on an inverter, and ${budget_additional} on other hardware.") 
+            st.success(
+                f"Based on your specified information, EcoEstimator AI recommends that you install "
+                f"${budget_purchase:,.2f} worth of solar panels, spend ${budget_install:,.2f} on installation, "
+                f"spend ${budget_batteries:,.2f} on supplementary battery costs, ${budget_inverter:,.2f} on an inverter, "
+                f"and ${budget_additional:,.2f} on other hardware."
+            ) 
             st.write("For more information, purchase the premium version")
 
     if st.session_state.get('submitted', False):
@@ -122,6 +127,7 @@ def show_survey_page():
             savings = calculate_energy_savings(st.session_state.electricity_bill, budget_purchase)
             display_recommendations(st.session_state.budget, st.session_state.electricity_bill, savings)
             st.session_state.show_chart = True
+
 
 def search_bing(query):
     headers = {"User-Agent": "Mozilla/5.0"}
