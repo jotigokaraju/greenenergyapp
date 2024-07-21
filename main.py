@@ -186,4 +186,4 @@ def show_search_page():
             
 def main():
     st.sidebar.title("Navigation")
-    page = st.sidebar.radio("Select Page", ["Home", "Survey']
+    page = st.sidebar.radio("Select Page", ["Home", "Survey"]
