@@ -11,6 +11,7 @@ STEP1_LIMIT = 1376    # Step 1 limit in kWh
 SOLAR_COST_PER_WATT = 2.30
 HOURS_PER_DAY = 4
 DAYS_PER_MONTH = 30
+REBATE_AMOUNT = 8000  # One-time rebate amount
 
 def calculate_energy_savings(current_bill, solar_panel_cost):
     net_charge = current_bill - BASIC_CHARGE
@@ -42,33 +43,33 @@ def display_recommendations(budget, current_bill, savings):
     st.subheader("Estimated Energy Bills")
     st.bar_chart(data_df.set_index('Category'))
     if (current_bill - savings) > 0:
-        st.success(f"You will save {savings} a month!")
+        st.success(f"You will save {savings:.2f} a month!")
     else:
         st.success("You are producing more energy than you need!")
-        st.success(f"You can profit ${round(savings)} a month by selling the extra energy back to the grid.")
+        st.success(f"You can profit ${round(savings, 2)} a month by selling the extra energy back to the grid.")
     
     st.divider()
 
     # Calculate ROI over time
     initial_investment = budget
-    monthly_savings = savings + 8000
-    months_to_break_even = initial_investment / monthly_savings
+    monthly_savings = savings
+    months_to_break_even = (initial_investment - REBATE_AMOUNT) / monthly_savings
     years_to_break_even = months_to_break_even / 12
 
     number = int(months_to_break_even * 1.5)  # Extend the timeline to 1.5 times the break-even point
 
     months = range(1, number + 1)
-    savings_over_time = [8000 + monthly_savings * month for month in months]
+    cumulative_savings = [REBATE_AMOUNT + monthly_savings * month for month in months]
     initial_investment_line = [initial_investment] * len(months)  # Match the length of months
 
     roi_data = pd.DataFrame({
         "Month": months,
-        "Cumulative Savings": savings_over_time,
+        "Cumulative Savings": cumulative_savings,
         "Initial Investment": initial_investment_line
     })
 
     st.subheader("ROI Over Time")
-    st.success("You will recieve $8000 in federal and provincial rebates")
+    st.success(f"You will receive ${REBATE_AMOUNT} in federal and provincial rebates")
     st.line_chart(roi_data.set_index("Month"))
 
     st.success(f"You will break even after approximately {years_to_break_even:.2f} years.")
@@ -78,7 +79,6 @@ def show_survey_page():
     st.divider()
     st.header("Helping You Transition to Green Energy")
     st.write("Please fill out the following form to get personalized recommendations:")
-
 
     with st.form("survey_form"):
         st.write("Rapid Form")
@@ -151,7 +151,7 @@ def main():
     page = st.sidebar.radio("Select Page", ["Home", "Survey", "Search"])
     
     if page == "Home":
-        st.logo('EcoShifting.png')
+        st.image('EcoShifting.png', width=300)
         st.title(":green[EcoShift]")
         st.divider()
         st.header("Welcome to EcoShift")
