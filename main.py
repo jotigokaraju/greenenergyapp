@@ -186,4 +186,27 @@ def show_search_page():
             
 def main():
     st.sidebar.title("Navigation")
-    page = st.sidebar.radio("Select Page", ["Home", "Survey"]
+    page = st.sidebar.radio("Select Page", ["Home", "Survey", "Search"])
+    
+    if page == "Home":
+        st.title(":green[EcoShift]")
+        st.divider()
+        st.header("Welcome to EcoShift")
+        st.subheader("Your Partner in Green Energy")
+        st.write("""
+            EcoShift is designed to help you transition to green energy solutions with ease. 
+
+            **What We Offer:**
+            - **Survey:** Get tailored recommendations for your green energy investments.
+            - **Search:** Find products and solutions to fit your needs.
+
+            Use the sidebar to navigate between pages.
+        """)
+    elif page == "Survey":
+        show_survey_page()
+    elif page == "Search":
+        show_search_page()
+
+if __name__ == "__main__":
+    main()
+
