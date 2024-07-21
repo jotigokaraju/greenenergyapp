@@ -3,6 +3,8 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
+st.logo('EcoShifting.png')
+
 # Constants for energy calculations
 BASIC_CHARGE = 6.759  # Monthly basic charge in dollars
 STEP1_RATE = 0.1097   # Step 1 energy charge in dollars per kWh
