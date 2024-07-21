@@ -76,7 +76,7 @@ def display_recommendations(budget, current_bill, savings):
 
     st.divider()
     st.subheader("Recommended Solar Panel Product:")
-    st.components.v1.iframe("https://ca.ecoflow.com/products/delta-160w-portable-solar-panel?variant=41338340081818", height=400, scrolling=True)
+    st.components.v1.iframe("https://ca.renogy.com/200-watt-12-volt-monocrystalline-solar-panel/?Rng_ads=85ea6920805ad1cd&kw=&ad=&gr=&ca=20221950916&pl=ga&gclid=CjwKCAjw4_K0BhBsEiwAfVVZ_zLbfdDqE1-74o4DDqSZnEUVj5lYYGzTiATz_bpF8kYwf5P0Zlvb7xoCg38QAvD_BwE&r_u_id=9222541894&gad_source=1", height=400, scrolling=True)
 
 
 def show_survey_page():
@@ -141,7 +141,6 @@ def show_search_page():
     st.write("Use the search bar below to find products and solutions.")
 
     search_query = st.text_input("Search", "")
-    search_query += " sustainable"
     
     if search_query:
         results = search_bing(search_query)
