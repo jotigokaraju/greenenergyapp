@@ -162,7 +162,7 @@ def display_recommendations(budget, current_bill, savings, kwh):
 
     st.divider()
     st.subheader("Recommended Battery Product:")
-    st.components.v1.iframe("https://www.tesla.com/en_ca/powerwall", height=400, scrolling=True)
+    st.components.v1.iframe("https://www.canbat.com/product/12v-100ah-cold-weather-lithium-battery/", height=400, scrolling=True)
 
     st.divider()
     st.subheader("Recommended Installation Service Provider:")
