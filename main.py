@@ -168,6 +168,18 @@ def display_recommendations(budget, current_bill, savings, kwh):
     st.subheader("Recommended Installation Service Provider:")
     st.components.v1.iframe("https://www.vancouversolarpv.ca/", height=400, scrolling=True)
 
+    st.divider()
+    st.subheader("Book an In-Person Consultation and Installation Now! We will come with everything you need")
+
+    with st.form("my_form"):
+        name = st.text_input("Your Name", "Jack Daniels")
+        email = title = st.text_input("Your Email", "name@example.com")
+        
+       # Every form must have a submit button.
+       submitted = st.form_submit_button("Submit")
+       if submitted:
+           st.success(f"You will here from us soon {name}")
+
 
 def show_survey_page():
     st.title(":green[EcoShift Survey]")
