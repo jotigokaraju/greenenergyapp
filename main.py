@@ -233,6 +233,12 @@ def show_survey_page():
             budget_inverter = int(budget * 0.05)
             budget_additional = int(budget * 0.1)
 
+            st.divider()
+
+            st.subheader("For your specifications, we recommend:")
+            st.image('solar.jpeg')
+            st.subheader("Solar Panels")
+            st.divider()
             st.success(
                 f"Based on your specified information, EcoShifter AI recommends that you install "
                 f"{budget_purchase:,.2f} CAD in solar panels, spend {budget_install:,.2f} CAD on installation costs, "
