@@ -176,7 +176,7 @@ def show_survey_page():
 
     with st.form("survey_form"):
         st.write("Rapid Form")
-        budget = st.slider("What is your budget?", 0, 500000, 50000)
+        budget = st.slider("What is your budget?", 0, 100000, 50000)
         home = st.text_area("What type of house do you live in?", "Condo")
         location = st.text_area("Where do you live?", "Vancouver")
         electricity_bill = st.number_input("What is your monthly electricity bill?", value=0.0, format="%.2f")
