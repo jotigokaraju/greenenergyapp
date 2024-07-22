@@ -153,7 +153,7 @@ def display_recommendations(budget, current_bill, savings, kwh):
     st.pyplot(fig)
 
     em = round(em)
-    st.success(f"You will save {em} grams of CO2 per month")
+    st.success(f"You will save {emissions1 - em} grams of CO2 per month")
 
     st.divider()
     st.subheader("Recommended Product:")
