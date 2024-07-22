@@ -167,7 +167,8 @@ def display_recommendations(budget, current_bill, savings, kwh):
     st.divider()
     st.subheader("Recommended Installation Service Provider:")
     st.components.v1.iframe("https://www.vancouversolarpv.ca/", height=400, scrolling=True)
-    
+
+
 def show_survey_page():
     st.title(":green[EcoShift Survey]")
     st.divider()
@@ -180,6 +181,23 @@ def show_survey_page():
         home = st.text_area("What type of house do you live in?", "Condo")
         location = st.text_area("Where do you live?", "Vancouver")
         electricity_bill = st.number_input("What is your monthly electricity bill?", value=0.0, format="%.2f")
+
+        # Additional questions
+        heating_type = st.selectbox("What type of heating does your home use?", ["Electric", "Gas", "Oil", "Other"], index=0)
+        cooling_type = st.selectbox("What type of cooling does your home use?", ["Central Air", "Window Units", "None"], index=2)
+        water_heater_type = st.selectbox("What type of water heater do you have?", ["Electric", "Gas", "Solar", "Other"], index=0)
+        solar_exposure = st.selectbox("How much sunlight does your home receive?", ["Full Sun", "Partial Shade", "Full Shade"], index=1)
+        roof_type = st.selectbox("What type of roof do you have?", ["Asphalt Shingles", "Metal", "Tile", "Flat", "Other"], index=0)
+        roof_age = st.slider("How old is your roof?", 0, 50, 10)
+        insulation_quality = st.selectbox("How would you rate your home's insulation?", ["Poor", "Average", "Good", "Excellent"], index=1)
+        windows_type = st.selectbox("What type of windows do you have?", ["Single Pane", "Double Pane", "Triple Pane"], index=1)
+        appliance_efficiency = st.selectbox("How energy-efficient are your appliances?", ["Not Efficient", "Somewhat Efficient", "Very Efficient"], index=1)
+        vehicle_type = st.selectbox("What type of vehicle do you drive?", ["Gasoline", "Hybrid", "Electric", "None"], index=0)
+        commute_distance = st.slider("What is your daily commute distance (in km)?", 0, 100, 10)
+        smart_home_devices = st.multiselect("Which smart home devices do you use?", ["Smart Thermostat", "Smart Lights", "Smart Plugs", "Smart Security", "None"])
+        energy_saving_measures = st.multiselect("What energy-saving measures have you implemented?", ["LED Lighting", "Energy Star Appliances", "Solar Panels", "Home Automation", "None"])
+        interest_in_batteries = st.selectbox("Are you interested in battery storage solutions?", ["Yes", "No"], index=1)
+        interest_in_financing = st.selectbox("Are you interested in financing options?", ["Yes", "No"], index=1)
         
         submitted = st.form_submit_button("Submit")
         
@@ -193,6 +211,21 @@ def show_survey_page():
             st.write(f"**Home:** {home}")
             st.write(f"**Location:** {location}")
             st.write(f"**Electricity Bill:** ${electricity_bill:,.2f}")
+            st.write(f"**Heating Type:** {heating_type}")
+            st.write(f"**Cooling Type:** {cooling_type}")
+            st.write(f"**Water Heater Type:** {water_heater_type}")
+            st.write(f"**Solar Exposure:** {solar_exposure}")
+            st.write(f"**Roof Type:** {roof_type}")
+            st.write(f"**Roof Age:** {roof_age} years")
+            st.write(f"**Insulation Quality:** {insulation_quality}")
+            st.write(f"**Windows Type:** {windows_type}")
+            st.write(f"**Appliance Efficiency:** {appliance_efficiency}")
+            st.write(f"**Vehicle Type:** {vehicle_type}")
+            st.write(f"**Commute Distance:** {commute_distance} km")
+            st.write(f"**Smart Home Devices:** {', '.join(smart_home_devices) if smart_home_devices else 'None'}")
+            st.write(f"**Energy-Saving Measures:** {', '.join(energy_saving_measures) if energy_saving_measures else 'None'}")
+            st.write(f"**Interest in Batteries:** {interest_in_batteries}")
+            st.write(f"**Interest in Financing:** {interest_in_financing}")
 
             budget_purchase = int(budget * 0.4)
             budget_install = int(budget * 0.2)
@@ -215,6 +248,7 @@ def show_survey_page():
             savings, kwh = calculate_energy_savings(st.session_state.electricity_bill, budget_purchase)
             display_recommendations(st.session_state.budget, st.session_state.electricity_bill, savings, kwh)
             st.session_state.show_chart = True
+
 
 
 def search_bing(query):
