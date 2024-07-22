@@ -34,16 +34,31 @@ def calculate_energy_savings(current_bill, solar_panel_cost):
 
     return savings, total_kwh_consumption
 
-def display_recommendations(budget, current_bill, savings, kwh):
+def display_recommendations(budget, current_bill, savings):
+    # Calculate total kWh consumption before and after solar panel installation
+    kwh_before = (current_bill - BASIC_CHARGE) / STEP1_RATE
+    if (current_bill - savings) <= STEP1_LIMIT * STEP1_RATE:
+        kwh_after = (current_bill - savings - BASIC_CHARGE) / STEP1_RATE
+    else:
+        q1_cost = STEP1_LIMIT * STEP1_RATE
+        q2_cost = (current_bill - savings - q1_cost) / STEP2_RATE
+        kwh_after = STEP1_LIMIT + q2_cost
+
+    # Carbon emission calculations
+    emissions1 = kwh_before * 7.6  # Emissions before installation
+    emissions2 = kwh_after * 7.6   # Emissions after installation
+
     data = {
-        "Category": ["Current Bill", "New Bill"],
-        "Amount": [current_bill, current_bill - savings]
+        "Emissions Per Month": ["Before", "After"],
+        "Grams of CO2": [emissions1, emissions2]
     }
-    data_df = pd.DataFrame(data)
+    data_eco = pd.DataFrame(data)
+    
     st.header("Analytics")
     st.divider()
     st.subheader("Estimated Energy Bills")
-    st.bar_chart(data_df.set_index('Category'))
+    st.bar_chart(data_eco.set_index('Emissions Per Month'))
+    
     if (current_bill - savings) > 0:
         st.success(f"You will save ${savings:.2f} a month!")
     else:
@@ -70,28 +85,16 @@ def display_recommendations(budget, current_bill, savings, kwh):
         "Initial Investment": initial_investment_line
     })
 
-    st.subheader("Return on Investment")
+    st.subheader("ROI Over Time")
     st.success(f"You will receive ${REBATE_AMOUNT} in federal and provincial rebates")
     st.line_chart(roi_data.set_index("Month"))
 
     st.success(f"You will break even after approximately {years_to_break_even:.2f} years.")
 
     st.divider()
-
-    st.subheader("Carbon Emission Reduction")
-
-    emissions1 = kwh * 7.6
-    emissions2 = savings * 7.6
-    data = {
-        "Emissions Per Month": ["Before", "After"],
-        "Grams of CO2": [emissions1, emissions2]
-    }
-    data_eco = pd.DataFrame(data)
-    st.bar_chart(data_eco.set_index('Emissions Per Month'))
-    st.success(f"You will save {emissions1 - emissions2} grams of CO2 per month")
-    st.divider()
     st.subheader("Recommended Product:")
     st.components.v1.iframe("https://ca.renogy.com/200-watt-12-volt-monocrystalline-solar-panel/?Rng_ads=85ea6920805ad1cd&kw=&ad=&gr=&ca=20221950916&pl=ga&gclid=CjwKCAjw4_K0BhBsEiwAfVVZ_zLbfdDqE1-74o4DDqSZnEUVj5lYYGzTiATz_bpF8kYwf5P0Zlvb7xoCg38QAvD_BwE&r_u_id=9222541894&gad_source=1", height=400, scrolling=True)
+
 
 
 def show_survey_page():
@@ -145,7 +148,6 @@ def show_survey_page():
 
 def search_bing(query):
     headers = {"User-Agent": "Mozilla/5.0"}
-    query = f"{query} energy-efficient sustainable"
     url = f"https://www.bing.com/search?q={query}"
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.text, "html.parser")
