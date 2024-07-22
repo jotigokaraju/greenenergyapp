@@ -34,7 +34,7 @@ def calculate_energy_savings(current_bill, solar_panel_cost):
 
     return savings, total_kwh_consumption
 
-def display_recommendations(budget, current_bill, savings):
+def display_recommendations(budget, current_bill, savings, kwh):
     # Calculate total kWh consumption before and after solar panel installation
     kwh_before = (current_bill - BASIC_CHARGE) / STEP1_RATE
     if (current_bill - savings) <= STEP1_LIMIT * STEP1_RATE:
@@ -45,12 +45,12 @@ def display_recommendations(budget, current_bill, savings):
         kwh_after = STEP1_LIMIT + q2_cost
 
     # Carbon emission calculations
-    emissions1 = kwh_before * 7.6  # Emissions before installation
-    emissions2 = kwh_after * 7.6   # Emissions after installation
+    emissions1 = kwh * 7.6  # Emissions before installation
+    emissions2 = savings/0.1097 * 7.6   # Emissions after installation
 
     data = {
         "Emissions Per Month": ["Before", "After"],
-        "Grams of CO2": [emissions1, emissions2]
+        "Grams of CO2": [emissions1, (emissions 1 - emissions2)]
     }
     data_eco = pd.DataFrame(data)
     
