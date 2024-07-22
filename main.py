@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
+import matplotlib.pyplot as plt
 
 st.logo('EcoShifting.png')
 
@@ -34,16 +35,41 @@ def calculate_energy_savings(current_bill, solar_panel_cost):
 
     return savings, total_kwh_consumption
 
+
+
 def display_recommendations(budget, current_bill, savings, kwh):
+    # Bar chart for Estimated Energy Bills
     data = {
         "Category": ["Current Bill", "New Bill"],
         "Amount": [current_bill, current_bill - savings]
     }
     data_df = pd.DataFrame(data)
+
     st.header("Analytics")
     st.divider()
     st.subheader("Estimated Energy Bills")
-    st.bar_chart(data_df.set_index('Category'))
+
+    fig, ax = plt.subplots()
+    data_df.set_index('Category').plot(kind='bar', ax=ax, color=['#4CAF50', '#FFC107'], legend=False)
+    
+    # Set axis labels and title
+    ax.set_xlabel('Category', fontsize=12)
+    ax.set_ylabel('Amount (CAD)', fontsize=12)
+    ax.set_title('Estimated Energy Bills', fontsize=14)
+    
+    # Add value labels on top of bars
+    for p in ax.patches:
+        ax.annotate(f'${p.get_height():,.2f}', (p.get_x() + p.get_width() / 2., p.get_height()), 
+                    ha='center', va='center', xytext=(0, 5), textcoords='offset points')
+    
+    # Customize gridlines and spines
+    ax.grid(axis='y', linestyle='--', alpha=0.7)
+    for spine in ax.spines.values():
+        spine.set_edgecolor('gray')
+        spine.set_linewidth(0.5)
+    
+    st.pyplot(fig)
+    
     if (current_bill - savings) > 0:
         st.success(f"You will save ${savings:.2f} a month!")
     else:
@@ -52,7 +78,7 @@ def display_recommendations(budget, current_bill, savings, kwh):
     
     st.divider()
 
-    # Calculate ROI over time
+    # ROI Over Time Line Chart
     initial_investment = budget
     monthly_savings = savings
     months_to_break_even = (initial_investment - REBATE_AMOUNT) / monthly_savings
@@ -62,7 +88,7 @@ def display_recommendations(budget, current_bill, savings, kwh):
 
     months = range(1, number + 1)
     cumulative_savings = [REBATE_AMOUNT + monthly_savings * month for month in months]
-    initial_investment_line = [initial_investment] * len(months)  # Match the length of months
+    initial_investment_line = [initial_investment] * len(months)
 
     roi_data = pd.DataFrame({
         "Month": months,
@@ -72,29 +98,66 @@ def display_recommendations(budget, current_bill, savings, kwh):
 
     st.subheader("Return on Investment")
     st.success(f"You will receive ${REBATE_AMOUNT} in federal and provincial rebates")
-    st.line_chart(roi_data.set_index("Month"))
+    
+    fig, ax = plt.subplots()
+    roi_data.set_index("Month").plot(ax=ax)
+    
+    # Set axis labels and title
+    ax.set_xlabel('Month', fontsize=12)
+    ax.set_ylabel('Amount (CAD)', fontsize=12)
+    ax.set_title('Return on Investment Over Time', fontsize=14)
+    
+    # Customize gridlines and spines
+    ax.grid(axis='y', linestyle='--', alpha=0.7)
+    for spine in ax.spines.values():
+        spine.set_edgecolor('gray')
+        spine.set_linewidth(0.5)
+    
+    st.pyplot(fig)
 
     st.success(f"You will break even after approximately {years_to_break_even:.2f} years.")
 
     st.divider()
 
+    # Carbon Emission Reduction Bar Chart
     st.subheader("Carbon Emission Reduction")
 
     emissions1 = kwh * 7.6
-    emissions2 = savings/0.1076 * 7.6
+    emissions2 = savings / 0.1076 * 7.6
     em = emissions1 - emissions2
     data = {
         "Emissions Per Month": ["Before", "After"],
-        "Grams of CO2": [emissions1, em]
+        "Grams of CO2": [emissions1, emissions2]
     }
     data_eco = pd.DataFrame(data)
-    st.bar_chart(data_eco.set_index('Emissions Per Month'))
+
+    fig, ax = plt.subplots()
+    data_eco.set_index('Emissions Per Month').plot(kind='bar', ax=ax, color=['#FF5722', '#03A9F4'], legend=False)
+    
+    # Set axis labels and title
+    ax.set_xlabel('Emissions Per Month', fontsize=12)
+    ax.set_ylabel('Grams of CO2', fontsize=12)
+    ax.set_title('Monthly Carbon Emissions Reduction', fontsize=14)
+    
+    # Add value labels on top of bars
+    for p in ax.patches:
+        ax.annotate(f'{p.get_height():,.0f}', (p.get_x() + p.get_width() / 2., p.get_height()), 
+                    ha='center', va='center', xytext=(0, 5), textcoords='offset points')
+    
+    # Customize gridlines and spines
+    ax.grid(axis='y', linestyle='--', alpha=0.7)
+    for spine in ax.spines.values():
+        spine.set_edgecolor('gray')
+        spine.set_linewidth(0.5)
+    
+    st.pyplot(fig)
+
     em = round(em)
     st.success(f"You will save {em} grams of CO2 per month")
+
     st.divider()
     st.subheader("Recommended Product:")
     st.components.v1.iframe("https://ca.renogy.com/200-watt-12-volt-monocrystalline-solar-panel/?Rng_ads=85ea6920805ad1cd&kw=&ad=&gr=&ca=20221950916&pl=ga&gclid=CjwKCAjw4_K0BhBsEiwAfVVZ_zLbfdDqE1-74o4DDqSZnEUVj5lYYGzTiATz_bpF8kYwf5P0Zlvb7xoCg38QAvD_BwE&r_u_id=9222541894&gad_source=1", height=400, scrolling=True)
-
 
 def show_survey_page():
     st.title(":green[EcoShift Survey]")
