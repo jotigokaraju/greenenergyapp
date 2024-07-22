@@ -157,9 +157,17 @@ def display_recommendations(budget, current_bill, savings, kwh):
     st.success(f"You will save {emer} grams of CO2 per month")
 
     st.divider()
-    st.subheader("Recommended Product:")
+    st.subheader("Recommended Solar Product:")
     st.components.v1.iframe("https://ca.renogy.com/200-watt-12-volt-monocrystalline-solar-panel/?Rng_ads=85ea6920805ad1cd&kw=&ad=&gr=&ca=20221950916&pl=ga&gclid=CjwKCAjw4_K0BhBsEiwAfVVZ_zLbfdDqE1-74o4DDqSZnEUVj5lYYGzTiATz_bpF8kYwf5P0Zlvb7xoCg38QAvD_BwE&r_u_id=9222541894&gad_source=1", height=400, scrolling=True)
 
+    st.divider()
+    st.subheader("Recommended Battery Product:")
+    st.components.v1.iframe("https://www.tesla.com/en_ca/powerwall", height=400, scrolling=True)
+
+    st.divider()
+    st.subheader("Recommended Installation Service Provider:")
+    st.components.v1.iframe("https://terratek.ca/#:~:text=Terratek%20Energy%20is%20the%20leading,residential%2C%20commercial%20and%20institutional%20customers.", height=400, scrolling=True)
+    
 def show_survey_page():
     st.title(":green[EcoShift Survey]")
     st.divider()
