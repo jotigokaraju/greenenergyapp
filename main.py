@@ -89,7 +89,8 @@ def display_recommendations(budget, current_bill, savings, kwh):
     }
     data_eco = pd.DataFrame(data)
     st.bar_chart(data_eco.set_index('Emissions Per Month'))
-    st.success(f"You will save {emissions1 - emissions2} grams of CO2 per month")
+    em = round(em)
+    st.success(f"You will save {em} grams of CO2 per month")
     st.divider()
     st.subheader("Recommended Product:")
     st.components.v1.iframe("https://ca.renogy.com/200-watt-12-volt-monocrystalline-solar-panel/?Rng_ads=85ea6920805ad1cd&kw=&ad=&gr=&ca=20221950916&pl=ga&gclid=CjwKCAjw4_K0BhBsEiwAfVVZ_zLbfdDqE1-74o4DDqSZnEUVj5lYYGzTiATz_bpF8kYwf5P0Zlvb7xoCg38QAvD_BwE&r_u_id=9222541894&gad_source=1", height=400, scrolling=True)
