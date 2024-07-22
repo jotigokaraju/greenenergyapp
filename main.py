@@ -236,7 +236,7 @@ def show_survey_page():
             st.divider()
 
             st.subheader("For your specifications, we recommend:")
-            st.image('solar.jpeg')
+            st.image('solar.jpg')
             st.subheader("Solar Panels")
             st.divider()
             st.success(
