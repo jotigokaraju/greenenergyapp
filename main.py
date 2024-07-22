@@ -172,8 +172,8 @@ def display_recommendations(budget, current_bill, savings, kwh):
     st.subheader("Book an In-Person Consultation and Installation Now! We will come with everything you need")
 
     with st.form("my_form"):
-        name = st.text_input("Your Name", "Jack Daniels")
-        email = title = st.text_input("Your Email", "name@example.com")
+        name = st.text_input("Your Name", "Kylian Mbappe")
+        email = title = st.text_input("Your Email", "k.mbappe@realmadrid.com")
         
         # Every form must have a submit button.
         submitted = st.form_submit_button("Submit")
