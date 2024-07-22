@@ -223,6 +223,8 @@ def main():
 
             Use the sidebar to navigate between pages.
         """)
+        st.divider()
+        st.button("See General Product Recommendations", type="primary")
     elif page == "Survey":
         show_survey_page()
     elif page == "Search":
