@@ -32,9 +32,9 @@ def calculate_energy_savings(current_bill, solar_panel_cost):
     else:
         savings = (STEP1_LIMIT * STEP1_RATE) + ((monthly_solar_kwh - STEP1_LIMIT) * STEP2_RATE)
 
-    return savings
+    return savings, total_kwh_consumption
 
-def display_recommendations(budget, current_bill, savings):
+def display_recommendations(budget, current_bill, savings, kwh):
     data = {
         "Category": ["Current Bill", "New Bill"],
         "Amount": [current_bill, current_bill - savings]
@@ -70,12 +70,25 @@ def display_recommendations(budget, current_bill, savings):
         "Initial Investment": initial_investment_line
     })
 
-    st.subheader("ROI Over Time")
+    st.subheader("Return on Investment")
     st.success(f"You will receive ${REBATE_AMOUNT} in federal and provincial rebates")
     st.line_chart(roi_data.set_index("Month"))
 
     st.success(f"You will break even after approximately {years_to_break_even:.2f} years.")
 
+    st.divider()
+
+    st.subheader("Carbon Emission Reduction")
+
+    emissions1 = kwh * 7.6
+    emissions2 = savings * 7.6
+    data = {
+        "Emissions Per Month": ["Before", "After"],
+        "Grams of CO2": [emissions1, emissions2]
+    }
+    data_eco = pd.DataFrame(data)
+    st.bar_chart(data_eco.set_index('Category'))
+    st.success(f"You will save {emissions1 - emissions2} grams of CO2 per month")
     st.divider()
     st.subheader("Recommended Product:")
     st.components.v1.iframe("https://ca.renogy.com/200-watt-12-volt-monocrystalline-solar-panel/?Rng_ads=85ea6920805ad1cd&kw=&ad=&gr=&ca=20221950916&pl=ga&gclid=CjwKCAjw4_K0BhBsEiwAfVVZ_zLbfdDqE1-74o4DDqSZnEUVj5lYYGzTiATz_bpF8kYwf5P0Zlvb7xoCg38QAvD_BwE&r_u_id=9222541894&gad_source=1", height=400, scrolling=True)
@@ -125,8 +138,8 @@ def show_survey_page():
     if st.session_state.get('submitted', False):
         if st.button("Premium Version", type="primary"):
             budget_purchase = st.session_state.budget * 0.4
-            savings = calculate_energy_savings(st.session_state.electricity_bill, budget_purchase)
-            display_recommendations(st.session_state.budget, st.session_state.electricity_bill, savings)
+            savings, kwh = calculate_energy_savings(st.session_state.electricity_bill, budget_purchase)
+            display_recommendations(st.session_state.budget, st.session_state.electricity_bill, savings, kwh)
             st.session_state.show_chart = True
 
 
