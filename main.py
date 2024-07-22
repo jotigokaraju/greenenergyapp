@@ -166,7 +166,7 @@ def display_recommendations(budget, current_bill, savings, kwh):
 
     st.divider()
     st.subheader("Recommended Installation Service Provider:")
-    st.components.v1.iframe("https://terratek.ca/#:~:text=Terratek%20Energy%20is%20the%20leading,residential%2C%20commercial%20and%20institutional%20customers.", height=400, scrolling=True)
+    st.components.v1.iframe("https://ca.ecoflow.com/products/delta-2-portable-power-station?variant=43725896056986", height=400, scrolling=True)
     
 def show_survey_page():
     st.title(":green[EcoShift Survey]")
