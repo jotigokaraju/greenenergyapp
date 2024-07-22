@@ -175,9 +175,9 @@ def display_recommendations(budget, current_bill, savings, kwh):
         name = st.text_input("Your Name", "Jack Daniels")
         email = title = st.text_input("Your Email", "name@example.com")
         
-       # Every form must have a submit button.
-       submitted = st.form_submit_button("Submit")
-       if submitted:
+        # Every form must have a submit button.
+        submitted = st.form_submit_button("Submit")
+        if submitted:
            st.success(f"You will here from us soon {name}")
 
 
