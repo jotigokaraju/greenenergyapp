@@ -166,7 +166,7 @@ def display_recommendations(budget, current_bill, savings, kwh):
 
     st.divider()
     st.subheader("Recommended Installation Service Provider:")
-    st.components.v1.iframe("https://ca.ecoflow.com/products/delta-2-portable-power-station?variant=43725896056986", height=400, scrolling=True)
+    st.components.v1.iframe("https://www.vancouversolarpv.ca/", height=400, scrolling=True)
     
 def show_survey_page():
     st.title(":green[EcoShift Survey]")
