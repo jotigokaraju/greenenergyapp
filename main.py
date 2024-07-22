@@ -194,11 +194,11 @@ def show_survey_page():
         appliance_efficiency = st.selectbox("How energy-efficient are your appliances?", ["Not Efficient", "Somewhat Efficient", "Very Efficient"], index=1)
         vehicle_type = st.selectbox("What type of vehicle do you drive?", ["Gasoline", "Hybrid", "Electric", "None"], index=0)
         commute_distance = st.slider("What is your daily commute distance (in km)?", 0, 100, 10)
-        smart_home_devices = st.multiselect("Which smart home devices do you use?", ["Smart Thermostat", "Smart Lights", "Smart Plugs", "Smart Security", "None"])
-        energy_saving_measures = st.multiselect("What energy-saving measures have you implemented?", ["LED Lighting", "Energy Star Appliances", "Solar Panels", "Home Automation", "None"])
+        smart_home_devices = st.multiselect("Which smart home devices do you use?", ["Smart Thermostat", "Smart Lights", "Smart Plugs", "Smart Security", "None"], placeholder="Smart Thermostat")
+        energy_saving_measures = st.multiselect("What energy-saving measures have you implemented?", ["LED Lighting", "Energy Star Appliances", "Solar Panels", "Home Automation", "None"], placeholder="LED Lighting")
         interest_in_batteries = st.selectbox("Are you interested in battery storage solutions?", ["Yes", "No"], index=1)
         interest_in_financing = st.selectbox("Are you interested in financing options?", ["Yes", "No"], index=1)
-        
+
         submitted = st.form_submit_button("Submit")
         
         if submitted:
@@ -207,7 +207,48 @@ def show_survey_page():
             st.session_state.submitted = True
             st.session_state.show_chart = False
 
-            st.write(f"**Budget:** ${budget:,.2f
+            st.write(f"**Budget:** ${budget:,.2f}")
+            st.write(f"**Home:** {home}")
+            st.write(f"**Location:** {location}")
+            st.write(f"**Electricity Bill:** ${electricity_bill:,.2f}")
+            st.write(f"**Heating Type:** {heating_type}")
+            st.write(f"**Cooling Type:** {cooling_type}")
+            st.write(f"**Water Heater Type:** {water_heater_type}")
+            st.write(f"**Solar Exposure:** {solar_exposure}")
+            st.write(f"**Roof Type:** {roof_type}")
+            st.write(f"**Roof Age:** {roof_age} years")
+            st.write(f"**Insulation Quality:** {insulation_quality}")
+            st.write(f"**Windows Type:** {windows_type}")
+            st.write(f"**Appliance Efficiency:** {appliance_efficiency}")
+            st.write(f"**Vehicle Type:** {vehicle_type}")
+            st.write(f"**Commute Distance:** {commute_distance} km")
+            st.write(f"**Smart Home Devices:** {', '.join(smart_home_devices) if smart_home_devices else 'None'}")
+            st.write(f"**Energy-Saving Measures:** {', '.join(energy_saving_measures) if energy_saving_measures else 'None'}")
+            st.write(f"**Interest in Batteries:** {interest_in_batteries}")
+            st.write(f"**Interest in Financing:** {interest_in_financing}")
+
+            budget_purchase = int(budget * 0.4)
+            budget_install = int(budget * 0.2)
+            budget_batteries = int(budget * 0.15)
+            budget_inverter = int(budget * 0.05)
+            budget_additional = int(budget * 0.1)
+
+            st.success(
+                f"Based on your specified information, EcoShifter AI recommends that you install "
+                f"{budget_purchase:,.2f} CAD in solar panels, spend {budget_install:,.2f} CAD on installation costs, "
+                f"spend {budget_batteries:,.2f} CAD on supplementary battery costs, {budget_inverter:,.2f} CAD on an inverter, "
+                f"and {budget_additional:,.2f} CAD on other hardware."
+            )
+            st.write("For more information, purchase the premium version")
+            st.divider()
+
+    if st.session_state.get('submitted', False):
+        if st.button("Premium Version", type="primary"):
+            budget_purchase = st.session_state.budget * 0.4
+            savings, kwh = calculate_energy_savings(st.session_state.electricity_bill, budget_purchase)
+            display_recommendations(st.session_state.budget, st.session_state.electricity_bill, savings, kwh)
+            st.session_state.show_chart = True
+
 
 
 
