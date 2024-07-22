@@ -145,7 +145,6 @@ def show_survey_page():
 
 def search_bing(query):
     headers = {"User-Agent": "Mozilla/5.0"}
-    query = f"{query} energy-efficient sustainable"
     url = f"https://www.bing.com/search?q={query}"
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.text, "html.parser")
