@@ -132,7 +132,7 @@ def display_recommendations(budget, current_bill, savings, kwh):
     data_eco = pd.DataFrame(data)
 
     fig, ax = plt.subplots()
-    data_eco.set_index('Emissions Per Month').plot(kind='bar', ax=ax, color=['#FF5722', '#03A9F4'], legend=False)
+    data_eco.set_index('Emissions Per Month').plot(kind='bar', ax=ax, color=['#0047AB', '#03A9F4'], legend=False)
     
     # Set axis labels and title
     ax.set_xlabel('Emissions Per Month', fontsize=12)
@@ -152,8 +152,9 @@ def display_recommendations(budget, current_bill, savings, kwh):
     
     st.pyplot(fig)
 
-    em = round(em)
-    st.success(f"You will save {emissions1 - em} grams of CO2 per month")
+    emer = emissions1 - em
+    emer = round(emer)
+    st.success(f"You will save {emer} grams of CO2 per month")
 
     st.divider()
     st.subheader("Recommended Product:")
