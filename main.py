@@ -87,7 +87,7 @@ def display_recommendations(budget, current_bill, savings, kwh):
         "Grams of CO2": [emissions1, emissions2]
     }
     data_eco = pd.DataFrame(data)
-    st.bar_chart(data_eco.set_index('Category'))
+    st.bar_chart(data_eco.set_index('Emissions Per Month'))
     st.success(f"You will save {emissions1 - emissions2} grams of CO2 per month")
     st.divider()
     st.subheader("Recommended Product:")
