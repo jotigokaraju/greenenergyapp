@@ -82,9 +82,10 @@ def display_recommendations(budget, current_bill, savings, kwh):
 
     emissions1 = kwh * 7.6
     emissions2 = savings/0.1076 * 7.6
+    em = emissions1 - emissions2
     data = {
         "Emissions Per Month": ["Before", "After"],
-        "Grams of CO2": [emissions1, emissions2]
+        "Grams of CO2": [emissions1, em]
     }
     data_eco = pd.DataFrame(data)
     st.bar_chart(data_eco.set_index('Emissions Per Month'))
